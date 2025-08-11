@@ -1,296 +1,437 @@
 <div class="quiz-container">
-  <div id="question-box">
-    <div class="quiz-header">
-      <div id="progress-bar-wrap">
-        <div id="progress-label"></div>
+  <div id="question-box" role="main" aria-label="Quiz Questions">
+    <header class="quiz-header">
+      <div id="progress-bar-wrap" aria-label="Quiz Progress">
+        <div id="progress-label" aria-live="polite"></div>
         <div id="progress-bar"><div id="progress"></div></div>
       </div>
-      <div id="timer"></div>
-    </div>
-    <div id="question-text"></div>
-    <ul id="options-list"></ul>
-    <div id="feedback"></div>
-    <div id="correct-answer"></div>
-    <button id="next-btn" style="display:none;">अगला प्रश्न ➡</button>
+      <div id="timer" aria-live="assertive" aria-atomic="true"></div>
+    </header>
+    <section id="question-text" tabindex="0"></section>
+    <ul id="options-list" role="list"></ul>
+    <div id="feedback" role="alert"></div>
+    <div id="correct-answer" aria-live="polite"></div>
+    <button id="next-btn" style="display:none;" aria-label="Next Question">अगला प्रश्न ➡</button>
   </div>
-  <div id="result-box" style="display:none;">
+  <main id="result-box" style="display:none;" role="region" aria-label="Quiz Result">
     <h3>🎉 क्विज़ समाप्त!</h3>
     <p>आपका स्कोर: <span id="score"></span>/<span id="total"></span></p>
-    <button id="retry-btn">🔄 पुनः प्रयास करें</button>
-  </div>
+    <button id="retry-btn" aria-label="Retry Quiz">🔄 पुनः प्रयास करें</button>
+  </main>
 </div>
 
 <style>
-.quiz-container{
-  max-width:700px;
-  margin:20px auto;
-  padding:20px;
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  font-family:"Poppins",sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.quiz-container {
+  max-width: 720px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: linear-gradient(135deg, #e0f3ff, #f9f9ff);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  font-family: 'Poppins', sans-serif;
+  color: #222;
 }
-.quiz-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
-#timer{
-  color:#d32f2f;
-  font-weight:bold;
+
+#progress-bar-wrap {
+  flex: 1 1 60%;
+  min-width: 180px;
 }
-#progress-bar-wrap{flex:1; margin-right:15px;}
-#progress-label{font-size:0.9rem; margin-bottom:4px;}
-#progress-bar{background:#eee;border-radius:6px;height:9px;overflow:hidden;}
-#progress{height:100%;background:#1976d2;width:0%;transition:width 0.5s;}
-#question-text{font-size:1.1rem;font-weight:600;margin-bottom:10px;}
-#options-list{list-style:none;padding:0;}
-#options-list li{margin-bottom:8px;}
-#options-list button{
-  width:100%;padding:10px;border:none;border-radius:6px;
-  background:#f0f0f0;cursor:pointer;text-align:left;transition:0.2s;
+
+#progress-label {
+  font-size: 0.95rem;
+  color: #1976d2;
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-align: left;
 }
-#options-list button:hover{background:#dcdcdc;}
-#feedback{font-weight:bold;margin-top:10px;}
-#correct-answer{margin-top:5px;font-weight:bold;color:#1565c0;}
-#next-btn,#retry-btn{
-  margin-top:15px;background:#1976d2;color:white;border:none;
-  padding:9px 14px;border-radius:5px;cursor:pointer;
+
+#progress-bar {
+  background: #d1e3ff;
+  border-radius: 12px;
+  height: 12px;
+  width: 100%;
+  box-shadow: inset 0 2px 5px rgba(25,118,210,0.25);
+  overflow: hidden;
 }
-#next-btn:hover,#retry-btn:hover{background:#125a9e;}
+
+#progress {
+  height: 100%;
+  background: #1976d2;
+  width: 0%;
+  border-radius: 12px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#timer {
+  color: #d32f2f;
+  font-weight: 700;
+  font-size: 1.15rem;
+  min-width: 100px;
+  text-align: right;
+  user-select: none;
+}
+
+#question-text {
+  font-size: 1.26rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+#options-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+#options-list li {
+  margin-bottom: 12px;
+}
+
+#options-list button {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid #1976d2;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1976d2;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, box-shadow 0.25s;
+  box-shadow: 0 4px 10px rgba(25,118,210,0.12);
+  text-align: left;
+}
+
+#options-list button:hover:not(:disabled) {
+  background: #1976d2;
+  color: white;
+  box-shadow: 0 6px 20px rgba(25,118,210,0.4);
+}
+
+#options-list button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#feedback {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 14px;
+  min-height: 28px;
+}
+
+#feedback.green {
+  color: #388e3c;
+}
+
+#feedback.red {
+  color: #d32f2f;
+}
+
+#feedback.orange {
+  color: #f57c00;
+}
+
+#correct-answer {
+  margin-top: 8px;
+  color: #1565c0;
+  font-weight: 600;
+  font-size: 1.02rem;
+  min-height: 26px;
+}
+
+button#next-btn,
+button#retry-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 22px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(25, 118, 210, 0.3);
+  transition: background-color 0.3s;
+}
+
+button#next-btn:hover,
+button#retry-btn:hover {
+  background: #125a9e;
+}
+
+@media (max-width: 480px) {
+  .quiz-container {
+    padding: 18px 15px;
+  }
+  #progress-bar-wrap {
+    flex: 1 1 100%;
+    margin-bottom: 10px;
+  }
+  #timer {
+    text-align: left;
+    min-width: auto;
+  }
+}
 </style>
 
 <script>
+// Data: इकाई 1: परिचय – 20 MCQ प्रश्न
 const quizData = [
-{ q:"अर्थव्यवस्था की केंद्रीय समस्याएँ किनसे संबंधित हैं?", options:[
-  {text:"उत्पादन की मात्रा",correct:false},
-  {text:"क्या, कैसे और किसके लिए उत्पादन किया जाए",correct:true},
-  {text:"केवल वितरण",correct:false},
-  {text:"केवल कीमत निर्धारण",correct:false}
-]},
-{ q:"नियोजित अर्थव्यवस्था में संसाधनों का नियंत्रण किसके पास होता है?", options:[
-  {text:"निजी क्षेत्र",correct:false},
-  {text:"उपभोक्ता",correct:false},
-  {text:"सरकार",correct:true},
-  {text:"विदेशी कंपनियाँ",correct:false}
-]},
-{ q:"बाज़ार अर्थव्यवस्था में वस्तुओं की कीमतें किससे तय होती हैं?", options:[
-  {text:"सरकार द्वारा",correct:false},
-  {text:"माँग और आपूर्ति द्वारा",correct:true},
-  {text:"बड़े व्यापारी द्वारा",correct:false},
-  {text:"विदेशी संस्थाओं द्वारा",correct:false}
-]},
-{ q:"सकारात्मक अर्थशास्त्र का अध्ययन किस विषय से संबंधित है?", options:[
-  {text:"‘क्या होना चाहिए’",correct:false},
-  {text:"‘क्या है’",correct:true},
-  {text:"‘कैसे होना चाहिए’",correct:false},
-  {text:"‘क्या संभव है’",correct:false}
-]},
-{ q:"आदर्शक अर्थशास्त्र का मुख्य उद्देश्य क्या है?", options:[
-  {text:"आर्थिक तथ्य निर्धारित करना",correct:false},
-  {text:"आर्थिक नीतियों का मूल्यांकन करना",correct:true},
-  {text:"धन संचय करना",correct:false},
-  {text:"उत्पादन बढ़ाना",correct:false}
-]},
-{ q:"व्यष्टि अर्थशास्त्र किसका अध्ययन करता है?", options:[
-  {text:"पूर्ण अर्थव्यवस्था",correct:false},
-  {text:"व्यक्तिगत इकाइयों का",correct:true},
-  {text:"राष्ट्रीय आय का",correct:false},
-  {text:"विदेशी व्यापार का",correct:false}
-]},
-{ q:"समष्टि अर्थशास्त्र का अध्ययन किस विषय से होता है?", options:[
-  {text:"व्यक्तिगत उपभोक्ता व्यवहार",correct:false},
-  {text:"कीमत निर्धारण",correct:false},
-  {text:"राष्ट्रीय आय और रोजगार",correct:true},
-  {text:"उद्योग संचालन",correct:false}
-]},
-{ q:"अर्थशास्त्र में ‘संसाधनों का कुशल उपयोग’ का अर्थ है—", options:[
-  {text:"न्यूनतम संसाधनों से अधिकतम उत्पादन करना",correct:true},
-  {text:"अधिक लागत करना",correct:false},
-  {text:"उत्पादन घटाना",correct:false},
-  {text:"संसाधनों को नष्ट करना",correct:false}
-]},
-{ q:"‘पुस्तक की योजना’ में इकाई 1 का क्या वर्णन होता है?", options:[
-  {text:"राष्ट्रीय आय",correct:false},
-  {text:"पुस्तक के विषय और इकाइयाँ",correct:true},
-  {text:"बजट प्रक्रिया",correct:false},
-  {text:"वित्तीय नीति",correct:false}
-]},
-{ q:"निम्नलिखित में से कौन-सी केंद्रीय समस्या नहीं है?", options:[
-  {text:"क्या उत्पादन किया जाए",correct:false},
-  {text:"कैसे उत्पादन किया जाए",correct:false},
-  {text:"किसके लिए उत्पादन किया जाए",correct:false},
-  {text:"विदेशी मुद्रा प्रबंधन",correct:true}
-]},
-{ q:"बाज़ार अर्थव्यवस्था में उत्पादन के साधनों का स्वामित्व किसके पास होता है?", options:[
-  {text:"निजी व्यक्तियों",correct:true},
-  {text:"सरकार",correct:false},
-  {text:"संयुक्त रूप से",correct:false},
-  {text:"विदेशी कंपनियाँ",correct:false}
-]},
-{ q:"क्या उत्पादन किया जाए इस प्रश्न का उत्तर किसका निर्धारण करता है?", options:[
-  {text:"उत्पादन की मात्रा",correct:false},
-  {text:"संसाधनों का उपयोग",correct:false},
-  {text:"वस्तुओं और सेवाओं का प्रकार और मात्रा",correct:true},
-  {text:"वितरण की विधि",correct:false}
-]},
-{ q:"किस प्रकार की अर्थव्यवस्था में सरकार मुख्य संसाधन नियंत्रक होती है?", options:[
-  {text:"बाज़ार अर्थव्यवस्था",correct:false},
-  {text:"नियोजित अर्थव्यवस्था",correct:true},
-  {text:"मिश्रित अर्थव्यवस्था",correct:false},
-  {text:"पारिवारिक अर्थव्यवस्था",correct:false}
-]},
-{ q:"सकारात्मक अर्थशास्त्र का मुख्य आधार है—", options:[
-  {text:"नीति सुझाव",correct:false},
-  {text:"वस्तुनिष्ठ तथ्यों का अध्ययन",correct:true},
-  {text:"अनुमान लगाना",correct:false},
-  {text:"समानता बढ़ाना",correct:false}
-]},
-{ q:"आदर्शक अर्थशास्त्र किससे जुड़ा होता है?", options:[
-  {text:"क्या है?",correct:false},
-  {text:"क्या होना चाहिए?",correct:true},
-  {text:"कैसे हो सकता है?",correct:false},
-  {text:"उत्पादन का मापन",correct:false}
-]},
-{ q:"व्यष्टि अर्थशास्त्र में पढ़ाई जाने वाली इकाइयाँ क्या हैं?", options:[
-  {text:"उद्योग और सरकार",correct:false},
-  {text:"उपभोक्ता और फर्म",correct:true},
-  {text:"राष्ट्रीय उत्पाद",correct:false},
-  {text:"संगठित क्षेत्र",correct:false}
-]},
-{ q:"समष्टि अर्थशास्त्र का अध्ययन मुख्य रूप से किससे संबंधित होता है?", options:[
-  {text:"व्यक्तिगत निर्णय",correct:false},
-  {text:"बाजारों के प्रकार",correct:false},
-  {text:"अर्थव्यवस्था का समग्र समीक्षा",correct:true},
-  {text:"फैक्ट्री संचालन",correct:false}
-]},
-{ q:"‘क्या उत्पादन करना है’ प्रश्न के समाधान में किसका निर्धारण सहायक होता है?", options:[
-  {text:"संसाधन उपलब्धता",correct:false},
-  {text:"तकनीकी प्रगति",correct:false},
-  {text:"किसान संघ",correct:false},
-  {text:"उपभोक्ता प्राथमिकता",correct:true}
-]},
-{ q:"निम्न में से कौन-सी अवधारणा ‘व्यष्टि अर्थशास्त्र’ में शामिल नहीं है?", options:[
-  {text:"उपभोक्ता का निर्णय",correct:false},
-  {text:"उत्पादन प्रक्रिया",correct:false},
-  {text:"राष्ट्रीय आय विश्लेषण",correct:true},
-  {text:"बाजार मांग",correct:false}
-]},
-{ q:"बजट सेट क्या दर्शाता है?", options:[
-  {text:"उपभोक्ता की समस्त आय",correct:false},
-  {text:"वस्तुओं की कीमतें",correct:false},
-  {text:"वह सभी संयोजन जो उपभोक्ता अपनी आय से खरीद सकता है",correct:true},
-  {text:"उपभोक्ता की पसंद",correct:false}
-]}
+  { q: "अर्थव्यवस्था की केंद्रीय समस्याएँ किनसे संबंधित हैं?", options: [
+      { text: "उत्पादन की मात्रा", correct: false },
+      { text: "क्या, कैसे और किसके लिए उत्पादन किया जाए", correct: true },
+      { text: "केवल वितरण", correct: false },
+      { text: "केवल कीमत निर्धारण", correct: false }
+    ] },
+  { q: "नियोजित अर्थव्यवस्था में संसाधनों का नियंत्रण किसके पास होता है?", options: [
+      { text: "निजी क्षेत्र", correct: false },
+      { text: "उपभोक्ता", correct: false },
+      { text: "सरकार", correct: true },
+      { text: "विदेशी कंपनियाँ", correct: false }
+    ] },
+  { q: "बाज़ार अर्थव्यवस्था में वस्तुओं की कीमतें किससे तय होती हैं?", options: [
+      { text: "सरकार द्वारा", correct: false },
+      { text: "माँग और आपूर्ति द्वारा", correct: true },
+      { text: "बड़े व्यापारी द्वारा", correct: false },
+      { text: "विदेशी संस्थाओं द्वारा", correct: false }
+    ] },
+  { q: "सकारात्मक अर्थशास्त्र का अध्ययन किस विषय से संबंधित है?", options: [
+      { text: "‘क्या होना चाहिए’", correct: false },
+      { text: "‘क्या है’", correct: true },
+      { text: "‘कैसे होना चाहिए’", correct: false },
+      { text: "‘क्या संभव है’", correct: false }
+    ] },
+  { q: "आदर्शक अर्थशास्त्र का मुख्य उद्देश्य क्या है?", options: [
+      { text: "आर्थिक तथ्य निर्धारित करना", correct: false },
+      { text: "आर्थिक नीतियों का मूल्यांकन करना", correct: true },
+      { text: "धन संचय करना", correct: false },
+      { text: "उत्पादन बढ़ाना", correct: false }
+    ] },
+  { q: "व्यष्टि अर्थशास्त्र किसका अध्ययन करता है?", options: [
+      { text: "पूर्ण अर्थव्यवस्था", correct: false },
+      { text: "व्यक्तिगत इकाइयों का", correct: true },
+      { text: "राष्ट्रीय आय का", correct: false },
+      { text: "विदेशी व्यापार का", correct: false }
+    ] },
+  { q: "समष्टि अर्थशास्त्र का अध्ययन किस विषय से होता है?", options: [
+      { text: "व्यक्तिगत उपभोक्ता व्यवहार", correct: false },
+      { text: "कीमत निर्धारण", correct: false },
+      { text: "राष्ट्रीय आय और रोजगार", correct: true },
+      { text: "उद्योग संचालन", correct: false }
+    ] },
+  { q: "अर्थशास्त्र में ‘संसाधनों का कुशल उपयोग’ का अर्थ है—", options: [
+      { text: "न्यूनतम संसाधनों से अधिकतम उत्पादन करना", correct: true },
+      { text: "अधिक लागत करना", correct: false },
+      { text: "उत्पादन घटाना", correct: false },
+      { text: "संसाधनों को नष्ट करना", correct: false }
+    ] },
+  { q: "‘पुस्तक की योजना’ में इकाई 1 का क्या वर्णन होता है?", options: [
+      { text: "राष्ट्रीय आय", correct: false },
+      { text: "पुस्तक के विषय और इकाइयाँ", correct: true },
+      { text: "बजट प्रक्रिया", correct: false },
+      { text: "वित्तीय नीति", correct: false }
+    ] },
+  { q: "निम्नलिखित में से कौन-सी केंद्रीय समस्या नहीं है?", options: [
+      { text: "क्या उत्पादन किया जाए", correct: false },
+      { text: "कैसे उत्पादन किया जाए", correct: false },
+      { text: "किसके लिए उत्पादन किया जाए", correct: false },
+      { text: "विदेशी मुद्रा प्रबंधन", correct: true }
+    ] },
+  { q: "बाज़ार अर्थव्यवस्था में उत्पादन के साधनों का स्वामित्व किसके पास होता है?", options: [
+      { text: "निजी व्यक्तियों", correct: true },
+      { text: "सरकार", correct: false },
+      { text: "संयुक्त रूप से", correct: false },
+      { text: "विदेशी कंपनियाँ", correct: false }
+    ] },
+  { q: "क्या उत्पादन किया जाए इस प्रश्न का उत्तर किसका निर्धारण करता है?", options: [
+      { text: "उत्पादन की मात्रा", correct: false },
+      { text: "संसाधनों का उपयोग", correct: false },
+      { text: "वस्तुओं और सेवाओं का प्रकार और मात्रा", correct: true },
+      { text: "वितरण की विधि", correct: false }
+    ] },
+  { q: "किस प्रकार की अर्थव्यवस्था में सरकार मुख्य संसाधन नियंत्रक होती है?", options: [
+      { text: "बाज़ार अर्थव्यवस्था", correct: false },
+      { text: "नियोजित अर्थव्यवस्था", correct: true },
+      { text: "मिश्रित अर्थव्यवस्था", correct: false },
+      { text: "पारिवारिक अर्थव्यवस्था", correct: false }
+    ] },
+  { q: "सकारात्मक अर्थशास्त्र का मुख्य आधार है—", options: [
+      { text: "नीति सुझाव", correct: false },
+      { text: "वस्तुनिष्ठ तथ्यों का अध्ययन", correct: true },
+      { text: "अनुमान लगाना", correct: false },
+      { text: "समानता बढ़ाना", correct: false }
+    ] },
+  { q: "आदर्शक अर्थशास्त्र किससे जुड़ा होता है?", options: [
+      { text: "क्या है?", correct: false },
+      { text: "क्या होना चाहिए?", correct: true },
+      { text: "कैसे हो सकता है?", correct: false },
+      { text: "उत्पादन का मापन", correct: false }
+    ] },
+  { q: "व्यष्टि अर्थशास्त्र में पढ़ाई जाने वाली इकाइयाँ क्या हैं?", options: [
+      { text: "उद्योग और सरकार", correct: false },
+      { text: "उपभोक्ता और फर्म", correct: true },
+      { text: "राष्ट्रीय उत्पाद", correct: false },
+      { text: "संगठित क्षेत्र", correct: false }
+    ] },
+  { q: "समष्टि अर्थशास्त्र का अध्ययन मुख्य रूप से किससे संबंधित होता है?", options: [
+      { text: "व्यक्तिगत निर्णय", correct: false },
+      { text: "बाजारों के प्रकार", correct: false },
+      { text: "अर्थव्यवस्था का समग्र समीक्षा", correct: true },
+      { text: "फैक्ट्री संचालन", correct: false }
+    ] },
+  { q: "‘क्या उत्पादन करना है’ प्रश्न के समाधान में किसका निर्धारण सहायक होता है?", options: [
+      { text: "संसाधन उपलब्धता", correct: false },
+      { text: "तकनीकी प्रगति", correct: false },
+      { text: "किसान संघ", correct: false },
+      { text: "उपभोक्ता प्राथमिकता", correct: true }
+    ] },
+  { q: "निम्न में से कौन-सी अवधारणा ‘व्यष्टि अर्थशास्त्र’ में शामिल नहीं है?", options: [
+      { text: "उपभोक्ता का निर्णय", correct: false },
+      { text: "उत्पादन प्रक्रिया", correct: false },
+      { text: "राष्ट्रीय आय विश्लेषण", correct: true },
+      { text: "बाजार मांग", correct: false }
+    ] },
+  { q: "बजट सेट क्या दर्शाता है?", options: [
+      { text: "उपभोक्ता की समस्त आय", correct: false },
+      { text: "वस्तुओं की कीमतें", correct: false },
+      { text: "वह सभी संयोजन जो उपभोक्ता अपनी आय से खरीद सकता है", correct: true },
+      { text: "उपभोक्ता की पसंद", correct: false }
+    ] }
 ];
 
-let index=0,score=0,timeLeft=15,timerInterval;
-const questionText=document.getElementById("question-text");
-const optionsList=document.getElementById("options-list");
-const feedback=document.getElementById("feedback");
-const correctAnswerDiv=document.getElementById("correct-answer");
-const nextBtn=document.getElementById("next-btn");
-const resultBox=document.getElementById("result-box");
-const scoreEl=document.getElementById("score");
-const totalEl=document.getElementById("total");
-const retryBtn=document.getElementById("retry-btn");
-const timerEl=document.getElementById("timer");
-const progress=document.getElementById("progress");
-const progressLabel=document.getElementById("progress-label");
+let index = 0,
+    score = 0,
+    timeLeft = 15,
+    timerInterval;
 
-function startTimer(){
+const questionText = document.getElementById("question-text");
+const optionsList = document.getElementById("options-list");
+const feedback = document.getElementById("feedback");
+const correctAnswerDiv = document.getElementById("correct-answer");
+const nextBtn = document.getElementById("next-btn");
+const resultBox = document.getElementById("result-box");
+const scoreEl = document.getElementById("score");
+const totalEl = document.getElementById("total");
+const retryBtn = document.getElementById("retry-btn");
+const timerEl = document.getElementById("timer");
+const progress = document.getElementById("progress");
+const progressLabel = document.getElementById("progress-label");
+
+function startTimer() {
   clearInterval(timerInterval);
-  timeLeft=15;
-  timerEl.textContent="⏳ "+timeLeft+"s";
-  timerInterval=setInterval(()=>{
+  timeLeft = 15;
+  timerEl.textContent = "⏳ " + timeLeft + "s";
+  timerInterval = setInterval(() => {
     timeLeft--;
-    timerEl.textContent="⏳ "+timeLeft+"s";
-    if(timeLeft<=0){
+    timerEl.textContent = "⏳ " + timeLeft + "s";
+    if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      feedback.style.color="orange";
-      feedback.textContent="⏰ समय समाप्त!";
+      feedback.className = "orange";
+      feedback.textContent = "⏰ समय समाप्त!";
       showCorrectAnswer();
       disableOptions();
-      setTimeout(autoNextQuestion,1200);
+      setTimeout(autoNextQuestion, 1200);
     }
-  },1000);
+  }, 1000);
 }
 
-function loadQuestion(){
-  feedback.textContent="";
-  correctAnswerDiv.textContent="";
-  nextBtn.style.display="none";
-  const currentQ=quizData[index];
-  questionText.textContent=(index+1)+". "+currentQ.q;
-  optionsList.innerHTML="";
-  currentQ.options.forEach(opt=>{
-    const li=document.createElement("li");
-    const btn=document.createElement("button");
-    btn.textContent=opt.text;
-    btn.onclick=()=>handleAnswer(opt,currentQ);
+function loadQuestion() {
+  feedback.textContent = "";
+  feedback.className = "";
+  correctAnswerDiv.textContent = "";
+  nextBtn.style.display = "none";
+  const currentQ = quizData[index];
+  questionText.textContent = (index + 1) + ". " + currentQ.q;
+  optionsList.innerHTML = "";
+  currentQ.options.forEach(opt => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+    btn.onclick = () => handleAnswer(opt, currentQ);
     li.appendChild(btn);
     optionsList.appendChild(li);
   });
   updateProgressBar();
   startTimer();
+  questionText.focus();
 }
 
-function disableOptions(){
-  Array.from(optionsList.querySelectorAll("button")).forEach(b=>b.disabled=true);
+function disableOptions() {
+  Array.from(optionsList.querySelectorAll("button")).forEach(b => b.disabled = true);
 }
 
-function handleAnswer(opt,currentQ){
+function handleAnswer(opt, currentQ) {
   clearInterval(timerInterval);
   disableOptions();
-  if(opt.correct){
-    feedback.style.color="green";feedback.textContent="✅ सही उत्तर!";
+  if (opt.correct) {
+    feedback.className = "green";
+    feedback.textContent = "✅ सही उत्तर!";
     score++;
-  }else{
-    feedback.style.color="red";feedback.textContent="❌ गलत उत्तर!";
+  } else {
+    feedback.className = "red";
+    feedback.textContent = "❌ गलत उत्तर!";
     showCorrectAnswer(currentQ);
   }
-  nextBtn.style.display="inline-block";
+  nextBtn.style.display = "inline-block";
 }
 
-function showCorrectAnswer(q=quizData[index]){
-  let correctOpt=q.options.find(o=>o.correct);
-  correctAnswerDiv.textContent="सही उत्तर: "+correctOpt.text;
+function showCorrectAnswer(q = quizData[index]) {
+  let correctOpt = q.options.find(o => o.correct);
+  correctAnswerDiv.textContent = "सही उत्तर: " + correctOpt.text;
 }
 
-function autoNextQuestion(){
+function autoNextQuestion() {
   index++;
-  if(index<quizData.length){loadQuestion();}
-  else{showResults();}
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
 }
 
-nextBtn.onclick=()=>{
+nextBtn.onclick = () => {
   index++;
-  if(index<quizData.length){loadQuestion();}
-  else{showResults();}
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
 };
 
-function updateProgressBar(){
-  const percent = ((index)/quizData.length)*100;
-  progress.style.width=percent+"%";
-  progressLabel.textContent=`${index+1} / ${quizData.length} प्रश्न`;
+function updateProgressBar() {
+  const percent = ((index) / quizData.length) * 100;
+  progress.style.width = percent + "%";
+  progressLabel.textContent = `${index + 1} / ${quizData.length} प्रश्न`;
 }
 
-function showResults(){
-  document.getElementById("question-box").style.display="none";
-  resultBox.style.display="block";
-  scoreEl.textContent=score;
-  totalEl.textContent=quizData.length;
-  progress.style.width="100%";
-  progressLabel.textContent=`${quizData.length} / ${quizData.length} प्रश्न पूरे!`;
+function showResults() {
+  document.getElementById("question-box").style.display = "none";
+  resultBox.style.display = "block";
+  scoreEl.textContent = score;
+  totalEl.textContent = quizData.length;
+  progress.style.width = "100%";
+  progressLabel.textContent = `${quizData.length} / ${quizData.length} प्रश्न पूरे!`;
 }
 
-retryBtn.onclick=()=>{
-  index=0;score=0;
-  document.getElementById("question-box").style.display="block";
-  resultBox.style.display="none";
+retryBtn.onclick = () => {
+  index = 0;
+  score = 0;
+  document.getElementById("question-box").style.display = "block";
+  resultBox.style.display = "none";
   loadQuestion();
-}
+};
 
 loadQuestion();
 </script>
